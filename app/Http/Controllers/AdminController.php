@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\StudentsImport;
 
 class AdminController extends Controller
 {
@@ -143,6 +145,20 @@ class AdminController extends Controller
         }
         
         return view('admin.students.index', compact('students'));
+    }
+
+    public function importStudents(Request $request)
+    {
+        $request->validate([
+            'file_excel' => 'required|mimes:xlsx,csv,xls|max:2048'
+        ]);
+
+        try {
+            Excel::import(new StudentsImport, $request->file('file_excel'));
+            return back()->with('success', 'Ratusan data siswa berhasil diimport!');
+        } catch (\Exception $e) {
+            return back()->withErrors('Gagal mengimport data. Pastikan format Excel sudah benar. Error: ' . $e->getMessage());
+        }
     }
 
     public function manageStudentCourses(Student $student)

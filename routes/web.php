@@ -64,6 +64,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::post('/students/{student}/courses', [App\Http\Controllers\AdminController::class, 'updateStudentCourses'])->name('admin.students.update_courses');
 
     Route::get('/export-pdf/{student}', [StudentController::class, 'exportPdf'])->name('export.pdf');
+
+    Route::post('/students/import', [AdminController::class, 'importStudents'])->name('admin.students.import');
 });
 
 // ==========================================
