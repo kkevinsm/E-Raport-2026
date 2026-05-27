@@ -46,6 +46,12 @@
                             <a href="{{ route('admin.students.manage_courses', $student->id) }}" class="btn btn-sm btn-info text-white">Atur Mapel</a>
                             
                             <a href="{{ route('admin.students.scores', $student->id) }}" class="btn btn-sm btn-warning text-dark">Nilai</a>
+
+                            <form action="{{ route('admin.students.destroy', $student->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus siswa ini? Semua data nilai dan akun siswa juga akan ikut terhapus.');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                            </form>
                         </div>
                     </td>
                 </tr>
@@ -91,7 +97,7 @@
                 "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json"
             },
             "pageLength": 10,
-            "order": [[1, 'asc']] // Tetap urutkan berdasarkan Nama Siswa
+            "order": [[1, 'asc']]
         });
     });
 </script>
