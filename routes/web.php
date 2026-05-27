@@ -57,9 +57,6 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/students/{student}/edit', [AdminController::class, 'editStudent'])->name('admin.students.edit');
     Route::put('/students/{student}', [AdminController::class, 'updateStudent'])->name('admin.students.update');
 
-    Route::post('/majors', [AdminController::class, 'storeMajor'])->name('admin.majors.store');
-    Route::delete('/majors/{major}', [AdminController::class, 'destroyMajor'])->name('admin.majors.destroy');
-
     Route::get('/students/{student}/courses', [App\Http\Controllers\AdminController::class, 'manageStudentCourses'])->name('admin.students.manage_courses');
     Route::post('/students/{student}/courses', [App\Http\Controllers\AdminController::class, 'updateStudentCourses'])->name('admin.students.update_courses');
 

@@ -34,37 +34,6 @@
     </div>
 </div>
 
-<div class="card shadow-sm mb-4">
-    <div class="card-header bg-white py-3">
-        <h6 class="mb-0 fw-bold text-dark">Manajemen Jurusan</h6>
-    </div>
-    <div class="card-body">
-        <form action="{{ route('admin.majors.store') }}" method="POST" class="row g-2 mb-3">
-            @csrf
-            <div class="col-md-10">
-                <input type="text" name="name_major" class="form-control" placeholder="Contoh: Teknik Otomasi Industri" required>
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-success w-100">Tambah</button>
-            </div>
-        </form>
-
-        <div class="d-flex flex-wrap gap-2">
-            @forelse(\App\Models\Major::all() as $major)
-                <span class="badge bg-info p-2 d-flex align-items-center shadow-sm">
-                    {{ $major->name_major }}
-                    <form action="{{ route('admin.majors.destroy', $major->id) }}" method="POST" class="ms-2">
-                        @csrf @method('DELETE')
-                        <button type="submit" class="btn-close btn-close-white" style="font-size: 0.5rem;" onclick="return confirm('Hapus jurusan ini?')"></button>
-                    </form>
-                </span>
-            @empty
-                <span class="text-muted small">Belum ada jurusan.</span>
-            @endforelse
-        </div>
-    </div>
-</div>
-
 <div class="card shadow-sm">
     <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
         <h6 class="mb-0 fw-bold text-dark">Daftar Mata Pelajaran</h6>
