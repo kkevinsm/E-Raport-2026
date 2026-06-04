@@ -29,6 +29,16 @@
     table.dataTable.no-footer {
         border-bottom: 1px solid #dee2e6 !important;
     }
+
+    /* Membuat semua Card melengkung (curved) bergaya modern */
+    .card {
+        border-radius: 16px !important; 
+        overflow: hidden; 
+        border: none !important;
+    }
+    .card-header {
+        border-bottom: 1px solid #f0f0f0; 
+    }
     </style>
 </head>
 <body class="bg-light">
