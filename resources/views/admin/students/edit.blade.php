@@ -12,7 +12,7 @@
                 <input type="text" name="name" class="form-control" value="{{ $student->user->name }}" required>
             </div>
             
-            <div class="row mb-4">
+            <div class="row g-3 mb-4">
                 <div class="col-md-3">
                     <label class="form-label fw-bold">Tingkat Kelas</label>
                     <select name="grade" class="form-select" required>

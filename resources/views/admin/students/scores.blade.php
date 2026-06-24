@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2 mb-4">
     <h5 class="fw-bold mb-0">Manajemen Nilai: {{ $student->user->name }}</h5>
     
-    <div class="d-flex gap-2">
+    <div class="d-flex flex-wrap gap-2">
         @if($student->scores->count() > 0)
             <a href="{{ route('export.pdf', $student->id) }}" class="btn btn-success">
                 Export PDF
@@ -22,7 +22,7 @@
         @if($courses->count() > 0)
             <form action="{{ route('admin.students.scores.store', $student->id) }}" method="POST">
                 @csrf
-                <div class="row">
+                <div class="row g-3">
                     <div class="col-md-3">
                         <label class="form-label">Mata Pelajaran</label>
                         <select name="course_id" class="form-select" required>
@@ -64,28 +64,30 @@
 <div class="card shadow-sm">
     <div class="card-header bg-white fw-bold">Riwayat Nilai Siswa</div>
     <div class="card-body p-0">
-        <table class="table table-hover mb-0">
-            <thead class="table-light">
-                <tr>
-                    <th class="ps-3">Mata Pelajaran</th>
-                    <th>Kategori</th>
-                    <th>Nilai</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($student->scores as $score)
-                <tr>
-                    <td class="ps-3">{{ $score->course->name }}</td>
-                    <td>{{ $score->category->name }}</td>
-                    <td class="fw-bold text-primary">{{ $score->score }}</td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="3" class="text-center py-3 text-muted">Belum ada nilai yang diinput.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">Mata Pelajaran</th>
+                        <th>Kategori</th>
+                        <th>Nilai</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($student->scores as $score)
+                    <tr>
+                        <td class="ps-3">{{ $score->course->name }}</td>
+                        <td>{{ $score->category->name }}</td>
+                        <td class="fw-bold text-primary">{{ $score->score }}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="3" class="text-center py-3 text-muted">Belum ada nilai yang diinput.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 @endsection

@@ -9,9 +9,14 @@ use App\Http\Controllers\GuruController;
 // ==========================================
 // RUTE AUTHENTICATION (LOGIN & LOGOUT)
 // ==========================================
-Route::get('/', [AuthController::class, 'showLogin'])->name('login');
+Route::get('/', function () {
+    return view('landing');
+})->name('landing');
+
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update')->middleware('auth');
 
 // ==========================================
 // RUTE KHUSUS ADMIN

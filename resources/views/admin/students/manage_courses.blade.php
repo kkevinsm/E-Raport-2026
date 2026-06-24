@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h5 class="fw-bold">Atur Mapel: {{ $student->user->name }}</h5>
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2 mb-4">
+    <h5 class="fw-bold mb-0">Atur Mapel: {{ $student->user->name }}</h5>
     <a href="{{ route('admin.students') }}" class="btn btn-secondary">&larr; Kembali</a>
 </div>
 

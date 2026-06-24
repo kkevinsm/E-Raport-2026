@@ -35,7 +35,7 @@
 </div>
 
 <div class="card shadow-sm">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+    <div class="card-header bg-white d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2 py-3">
         <h6 class="mb-0 fw-bold text-dark">Daftar Mata Pelajaran</h6>
         <a href="{{ route('admin.courses.create') }}" class="btn btn-sm btn-primary">+ Tambah Mapel</a>
     </div>

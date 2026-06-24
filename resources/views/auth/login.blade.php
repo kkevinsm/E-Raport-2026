@@ -17,6 +17,30 @@
             min-height: 100vh;
             background-color: #f8f9fa; 
         }
+
+        @media (max-width: 991px) {
+            .login-right {
+                background-image: url("{{ asset('images/landing-bg.png') }}");
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                position: relative;
+            }
+            .login-right::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.15);
+                z-index: 1;
+            }
+            .login-right > * {
+                position: relative;
+                z-index: 2;
+            }
+        }
     </style>
 </head>
 <body>

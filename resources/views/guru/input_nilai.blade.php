@@ -35,6 +35,7 @@
                                 @endforeach
                                 
                                 <th class="bg-primary text-white align-middle" style="width: 120px;">Rata-rata</th>
+                                <th class="align-middle text-center" style="width: 100px;">Cetak</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -63,6 +64,11 @@
                                 
                                 <td class="text-center bg-light">
                                     <h5 class="mb-0 fw-bold text-primary average-display">0</h5>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <a href="{{ route('export.pdf', $student->id) }}" class="btn btn-sm btn-outline-danger px-2" style="border-radius: 6px;" title="Cetak Rapor PDF">
+                                        <i class="bi bi-file-pdf-fill"></i> PDF
+                                    </a>
                                 </td>
                             </tr>
                             @endforeach

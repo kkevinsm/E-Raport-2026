@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2 mb-3">
     <h5 class="mb-0 fw-bold">Detail Guru: {{ $user->name }}</h5>
     <a href="{{ route('admin.users') }}" class="btn btn-sm btn-secondary">&larr; Kembali ke Daftar Pengguna</a>
 </div>
@@ -54,34 +54,36 @@
                 <h6 class="mb-0 fw-bold">Daftar Mata Pelajaran yang Diampuh</h6>
             </div>
             <div class="card-body p-0">
-                <table class="table table-striped table-hover mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="ps-3" style="width: 50px;">No</th>
-                            <th>Mata Pelajaran</th>
-                            <th class="text-center" style="width: 120px;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($user->courses as $index => $course)
-                        <tr>
-                            <td class="ps-3 align-middle">{{ $index + 1 }}</td>
-                            <td class="align-middle fw-bold text-primary">{{ $course->name }}</td>
-                            <td class="align-middle text-center">
-                                <form action="{{ route('admin.gurus.remove_course', ['user' => $user->id, 'course' => $course->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin melepas mata pelajaran ini dari guru tersebut?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger px-3">Lepas</button>
-                                </form>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="3" class="text-center py-4 text-muted">Guru ini belum mengampuh mata pelajaran apa pun.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-3" style="width: 50px;">No</th>
+                                <th>Mata Pelajaran</th>
+                                <th class="text-center" style="width: 120px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($user->courses as $index => $course)
+                            <tr>
+                                <td class="ps-3 align-middle">{{ $index + 1 }}</td>
+                                <td class="align-middle fw-bold text-primary">{{ $course->name }}</td>
+                                <td class="align-middle text-center">
+                                    <form action="{{ route('admin.gurus.remove_course', ['user' => $user->id, 'course' => $course->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin melepas mata pelajaran ini dari guru tersebut?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger px-3">Lepas</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">Guru ini belum mengampuh mata pelajaran apa pun.</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

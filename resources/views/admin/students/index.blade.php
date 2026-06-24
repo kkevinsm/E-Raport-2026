@@ -2,10 +2,10 @@
 
 @section('content')
 <div class="card shadow-sm">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-        <h6 class="mb-0 fw-bold">Daftar Siswa</h6>
+    <div class="card-header bg-white d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2 py-3">
+        <h6 class="mb-0 fw-bold text-dark">Daftar Siswa</h6>
         
-        <div class="d-flex gap-2">
+        <div class="d-flex flex-wrap gap-2">
             <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#importModal">
                 Import Data Siswa
             </button>
@@ -18,46 +18,48 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
         
-        <table id="studentTable" class="table table-hover w-100">
-            <thead class="table-light">
-                <tr>
-                    <th class="ps-3">NIS / NISN</th>
-                    <th>Nama Siswa</th>
-                    <th>Kelas</th>
-                    <th>Jurusan</th> 
-                    <th class="text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($students as $student)
-                <tr>
-                    <td class="ps-3">
-                        <strong>{{ $student->nis }}</strong><br>
-                        <small class="text-muted">{{ $student->nisn }}</small>
-                    </td>
-                    <td class="align-middle"><strong>{{ $student->user->name }}</strong></td>
-                    <td class="align-middle">{{ $student->class_name }}</td>
-                    <td class="align-middle">{{ $student->major->name_major ?? '-' }}</td>
-                    
-                    <td class="align-middle text-center">
-                        <div class="d-flex justify-content-center gap-1">
-                            <a href="{{ route('admin.students.edit', $student->id) }}" class="btn btn-sm btn-primary">Edit</a>
-                            
-                            <a href="{{ route('admin.students.manage_courses', $student->id) }}" class="btn btn-sm btn-info text-white">Atur Mapel</a>
-                            
-                            <a href="{{ route('admin.students.scores', $student->id) }}" class="btn btn-sm btn-warning text-dark">Nilai</a>
-
-                            <form action="{{ route('admin.students.destroy', $student->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus siswa ini? Semua data nilai dan akun siswa juga akan ikut terhapus.');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table id="studentTable" class="table table-hover w-100">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">NIS / NISN</th>
+                        <th>Nama Siswa</th>
+                        <th>Kelas</th>
+                        <th>Jurusan</th> 
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($students as $student)
+                    <tr>
+                        <td class="ps-3">
+                            <strong>{{ $student->nis }}</strong><br>
+                            <small class="text-muted">{{ $student->nisn }}</small>
+                        </td>
+                        <td class="align-middle"><strong>{{ $student->user->name }}</strong></td>
+                        <td class="align-middle">{{ $student->class_name }}</td>
+                        <td class="align-middle">{{ $student->major->name_major ?? '-' }}</td>
+                        
+                        <td class="align-middle text-center">
+                            <div class="d-flex justify-content-center gap-1">
+                                <a href="{{ route('admin.students.edit', $student->id) }}" class="btn btn-sm btn-primary">Edit</a>
+                                
+                                <a href="{{ route('admin.students.manage_courses', $student->id) }}" class="btn btn-sm btn-info text-white">Atur Mapel</a>
+                                
+                                <a href="{{ route('admin.students.scores', $student->id) }}" class="btn btn-sm btn-warning text-dark">Nilai</a>
+    
+                                <form action="{{ route('admin.students.destroy', $student->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus siswa ini? Semua data nilai dan akun siswa juga akan ikut terhapus.');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
