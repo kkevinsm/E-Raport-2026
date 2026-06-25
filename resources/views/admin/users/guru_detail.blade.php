@@ -23,9 +23,6 @@
                 <h6 class="mb-0 fw-bold">Tugaskan Mata Pelajaran</h6>
             </div>
             <div class="card-body">
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
                 
                 <form action="{{ route('admin.gurus.assign_course', $user->id) }}" method="POST">
                     @csrf

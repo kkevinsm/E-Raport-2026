@@ -14,19 +14,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Buat Akun Admin Default
-        User::create([
-            'name' => 'Admin System',
-            'username' => 'admin',
-            'password' => Hash::make('123456'),
-            'role' => 'admin',
-        ]);
+        // 1. Buat Akun Admin Default (hanya jika belum ada)
+        if (!User::where('username', 'admin')->exists()) {
+            User::create([
+                'name' => 'Admin System',
+                'username' => 'admin',
+                'password' => Hash::make('123456'),
+                'role' => 'admin',
+            ]);
+        }
 
-        // 2. Tambahkan Data Jurusan Default (Agar form Tambah Siswa bisa langsung dipakai)
-        Major::create(['name_major' => 'Teknik Komputer dan Jaringan']);
-        Major::create(['name_major' => 'Desain Komunikasi Visual']);
-        Major::create(['name_major' => 'Teknik Instalasi Tenaga Listrik']);
-        Major::create(['name_major' => 'Teknik Pemesinan']);
+        // 2. Tambahkan Data Jurusan Default (hanya jika belum ada)
+        $majors = [
+            'Teknik Kendaraan Ringan',
+            'Desain Komunikasi Visual',
+            'Teknik Instalasi Tenaga Listrik',
+            'Teknik Pemesinan'
+        ];
+
+        foreach ($majors as $majorName) {
+            Major::firstOrCreate(['name_major' => $majorName]);
+        }
 
     }
 }

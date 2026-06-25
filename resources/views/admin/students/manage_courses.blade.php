@@ -9,9 +9,6 @@
 <div class="card shadow-sm">
     <div class="card-header bg-white fw-bold">Pilih Mata Pelajaran</div>
     <div class="card-body">
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
 
         <form action="{{ route('admin.students.update_courses', $student->id) }}" method="POST">
             @csrf

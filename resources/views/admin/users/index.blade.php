@@ -7,9 +7,6 @@
         <a href="{{ route('admin.users.create') }}" class="btn btn-sm btn-primary">+ Tambah Pengguna</a>
     </div>
     <div class="card-body">
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
         @if(session('error'))
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif

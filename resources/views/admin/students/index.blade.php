@@ -97,6 +97,11 @@
                     <div class="alert alert-info py-2">
                         <small>Pastikan format kolom (header) pada baris pertama Excel Anda sesuai dengan template sistem.</small>
                     </div>
+                    <div class="mb-2">
+                        <a href="{{ asset('templates/template_siswa.xlsx') }}" class="btn btn-sm btn-outline-secondary w-100 fw-semibold" download>
+                            <i class="bi bi-download me-1"></i> Download Template .xlsx
+                        </a>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>

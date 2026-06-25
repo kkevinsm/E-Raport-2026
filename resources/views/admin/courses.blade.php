@@ -40,9 +40,6 @@
         <a href="{{ route('admin.courses.create') }}" class="btn btn-sm btn-primary">+ Tambah Mapel</a>
     </div>
     <div class="card-body">
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
         
         <div class="table-responsive">
             <table id="courseTable" class="table table-hover w-100">
