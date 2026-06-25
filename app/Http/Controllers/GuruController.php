@@ -17,7 +17,7 @@ class GuruController extends Controller
             abort(403, 'Akses tidak diizinkan');
         }
 
-        $guru = User::where('id', Auth::id())->with('courses')->first();
+        $guru = User::where('id', Auth::id())->with('courses.major')->first();
         return view('guru.dashboard', compact('guru'));
     }
 
@@ -32,11 +32,17 @@ class GuruController extends Controller
         // Ambil SEMUA kategori nilai yang dibuat oleh Admin
         $categories = \App\Models\ScoreCategory::all();
 
-        // PERBAIKAN DI SINI:
         // Mengambil HANYA siswa yang berelasi dengan mapel ini melalui tabel pivot (course_student)
-        $students = $course->students()->with(['user', 'scores' => function($query) use ($course) {
-            $query->where('course_id', $course->id);
-        }])->get();
+        // Load juga capaianPembelajaran untuk mapel ini
+        $students = $course->students()->with([
+            'user', 
+            'scores' => function($query) use ($course) {
+                $query->where('course_id', $course->id);
+            },
+            'capaianPembelajaran' => function($query) use ($course) {
+                $query->where('course_id', $course->id);
+            }
+        ])->get();
 
         return view('guru.input_nilai', compact('course', 'students', 'categories'));
     }
@@ -50,8 +56,11 @@ class GuruController extends Controller
         $request->validate([
             'scores' => 'required|array',
             'scores.*.*' => 'nullable|numeric|min:0|max:100', 
+            'capaian' => 'nullable|array',
+            'capaian.*' => 'nullable|string',
         ]);
 
+        // Simpan Nilai Kategori
         foreach ($request->scores as $student_id => $category_scores) {
             foreach ($category_scores as $category_id => $score_value) {
                 if ($score_value !== null) {
@@ -67,6 +76,21 @@ class GuruController extends Controller
             }
         }
 
-        return back()->with('success', 'Semua Kategori Nilai berhasil disimpan!');
+        // Simpan Capaian Pembelajaran
+        if ($request->has('capaian')) {
+            foreach ($request->capaian as $student_id => $description) {
+                \App\Models\CapaianPembelajaran::updateOrCreate(
+                    [
+                        'student_id' => $student_id,
+                        'course_id' => $course->id,
+                    ],
+                    [
+                        'description' => $description,
+                    ]
+                );
+            }
+        }
+
+        return back()->with('success', 'Semua Nilai dan Capaian Pembelajaran berhasil disimpan!');
     }
 }

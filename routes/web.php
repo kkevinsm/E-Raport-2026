@@ -68,6 +68,11 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/export-pdf/{student}', [StudentController::class, 'exportPdf'])->name('export.pdf');
 
     Route::post('/students/import', [AdminController::class, 'importStudents'])->name('admin.students.import');
+    Route::post('/students/export-pdf-bulk', [StudentController::class, 'exportPdfBulk'])->name('admin.students.export_pdf_bulk');
+
+    // Naik Kelas (Migrate)
+    Route::get('/migrate-kelas', [AdminController::class, 'showMigrateKelas'])->name('admin.migrate_kelas');
+    Route::post('/migrate-kelas', [AdminController::class, 'processMigrateKelas'])->name('admin.migrate_kelas.process');
 });
 
 // ==========================================
@@ -88,4 +93,5 @@ Route::middleware(['auth'])->prefix('guru')->group(function () {
 Route::middleware(['auth'])->prefix('student')->group(function () {
     Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
     Route::get('/profile', [StudentController::class, 'profile'])->name('student.profile'); 
+    Route::get('/export-pdf', [StudentController::class, 'exportPdfStudent'])->name('student.export_pdf');
 });

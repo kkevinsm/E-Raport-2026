@@ -48,16 +48,50 @@
             <table id="courseTable" class="table table-hover w-100">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-3" style="width: 80px;">No</th>
+                        <th class="ps-3" style="width: 50px;">No</th>
+                        <th>Tahun Ajaran</th>
+                        <th>Semester</th>
                         <th>Nama Mata Pelajaran</th>
-                        <th class="text-center" style="width: 150px;">Aksi</th>
+                        <th>Kelas</th>
+                        <th>Jurusan</th>
+                        <th>Guru Pengampuh</th>
+                        <th class="text-center" style="width: 120px;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($courses as $index => $course)
                     <tr>
                         <td class="ps-3 align-middle">{{ $index + 1 }}</td>
+                        <td class="align-middle">
+                            {{ $course->academic_year ?? '-' }}
+                        </td>
+                        <td class="align-middle">
+                            @if($course->semester == 1)
+                                <span class="badge bg-info text-dark">Semester 1</span>
+                            @elseif($course->semester == 2)
+                                <span class="badge bg-warning text-dark">Semester 2</span>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </td>
                         <td class="align-middle"><strong>{{ $course->name }}</strong></td>
+                        <td class="align-middle">
+                            @if($course->grade)
+                                <span class="badge bg-secondary">Kelas {{ $course->grade }}</span>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </td>
+                        <td class="align-middle">
+                            {{ $course->major->name_major ?? '-' }}
+                        </td>
+                        <td class="align-middle">
+                            @forelse($course->teachers as $guru)
+                                <span class="badge bg-light text-dark border me-1">{{ $guru->name }}</span>
+                            @empty
+                                <span class="text-muted small">Belum ada</span>
+                            @endforelse
+                        </td>
                         <td class="align-middle text-center">
                             <form action="{{ route('admin.courses.destroy', $course->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus mapel ini?')">
                                 @csrf
@@ -81,7 +115,7 @@
             $('#courseTable').DataTable({
                 "language": { "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json" },
                 "pageLength": 10,
-                "order": [[1, 'asc']],
+                "order": [[1, 'asc'], [2, 'asc']],
                 "dom": '<"d-flex justify-content-between align-items-center mb-3"l f>rt<"d-flex justify-content-between align-items-center mt-3"i p>',
             });
         }

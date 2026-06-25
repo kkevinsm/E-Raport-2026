@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'academic_year', 'semester', 'grade', 'major_id'];
 
     public function scores()
     {
@@ -23,4 +23,13 @@ class Course extends Model
         return $this->belongsToMany(Student::class, 'course_student');
     }
 
+    public function major()
+    {
+        return $this->belongsTo(Major::class, 'major_id');
+    }
+
+    public function capaianPembelajaran()
+    {
+        return $this->hasMany(CapaianPembelajaran::class, 'course_id');
+    }
 }

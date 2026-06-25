@@ -18,14 +18,14 @@
         </div>
 
         <div class="card shadow-sm mb-4">
-            <div class="card-header bg-white fw-bold">Rata-rata Nilai per Mata Pelajaran</div>
+            <div class="card-header bg-white fw-bold">Nilai Akhir per Mata Pelajaran</div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Mata Pelajaran</th>
-                                <th>Rata-rata Seluruh Siswa</th>
+                                <th>Nilai Akhir Seluruh Siswa</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -40,4 +40,8 @@ class Student extends Model
         return $this->belongsToMany(Course::class, 'course_student');
     }
 
+    public function capaianPembelajaran()
+    {
+        return $this->hasMany(CapaianPembelajaran::class, 'student_id');
     }
+}

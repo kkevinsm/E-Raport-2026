@@ -17,12 +17,32 @@
             @csrf
             <div class="row">
                 @foreach($allCourses as $course)
-                <div class="col-md-4 mb-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="course_ids[]" value="{{ $course->id }}" id="course_{{ $course->id }}" 
-                            {{ in_array($course->id, $assignedCourseIds) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="course_{{ $course->id }}">
-                            {{ $course->name }}
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="form-check border rounded p-3 h-100 {{ in_array($course->id, $assignedCourseIds) ? 'border-primary bg-primary bg-opacity-10' : '' }}">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="course_ids[]"
+                               value="{{ $course->id }}"
+                               id="course_{{ $course->id }}"
+                               {{ in_array($course->id, $assignedCourseIds) ? 'checked' : '' }}>
+                        <label class="form-check-label w-100" for="course_{{ $course->id }}">
+                            <span class="fw-bold d-block">{{ $course->name }}</span>
+                            <span class="d-flex flex-wrap gap-1 mt-1">
+                                @if($course->academic_year)
+                                    <span class="badge bg-secondary" style="font-size:0.7rem;">{{ $course->academic_year }}</span>
+                                @endif
+                                @if($course->semester == 1)
+                                    <span class="badge bg-info text-dark" style="font-size:0.7rem;">Semester 1</span>
+                                @elseif($course->semester == 2)
+                                    <span class="badge bg-warning text-dark" style="font-size:0.7rem;">Semester 2</span>
+                                @endif
+                                @if($course->grade)
+                                    <span class="badge bg-dark" style="font-size:0.7rem;">Kelas {{ $course->grade }}</span>
+                                @endif
+                            </span>
+                            @if($course->major)
+                                <small class="text-muted d-block mt-1">{{ $course->major->name_major }}</small>
+                            @endif
                         </label>
                     </div>
                 </div>

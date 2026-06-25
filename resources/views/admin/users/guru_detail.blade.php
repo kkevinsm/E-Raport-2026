@@ -34,7 +34,13 @@
                         <select name="course_id" class="form-select" required>
                             <option value="">-- Pilih dari Dropdown --</option>
                             @forelse($availableCourses as $course)
-                                <option value="{{ $course->id }}">{{ $course->name }}</option>
+                                <option value="{{ $course->id }}">
+                                    {{ $course->name }}
+                                    @if($course->academic_year) — {{ $course->academic_year }} @endif
+                                    @if($course->semester) · Smt {{ $course->semester }} @endif
+                                    @if($course->grade) · Kls {{ $course->grade }} @endif
+                                    @if($course->major) · {{ $course->major->name_major }} @endif
+                                </option>
                             @empty
                                 <option value="" disabled>Semua mapel sudah diampuh guru ini</option>
                             @endforelse
@@ -60,14 +66,42 @@
                             <tr>
                                 <th class="ps-3" style="width: 50px;">No</th>
                                 <th>Mata Pelajaran</th>
-                                <th class="text-center" style="width: 120px;">Aksi</th>
+                                <th>Tahun Ajaran</th>
+                                <th>Semester</th>
+                                <th>Kelas</th>
+                                <th>Jurusan</th>
+                                <th class="text-center" style="width: 100px;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($user->courses as $index => $course)
                             <tr>
                                 <td class="ps-3 align-middle">{{ $index + 1 }}</td>
-                                <td class="align-middle fw-bold text-primary">{{ $course->name }}</td>
+                                <td class="align-middle">
+                                    <span class="fw-bold text-primary">{{ $course->name }}</span>
+                                </td>
+                                <td class="align-middle">
+                                    {{ $course->academic_year ?? '-' }}
+                                </td>
+                                <td class="align-middle">
+                                    @if($course->semester == 1)
+                                        <span class="badge bg-info text-dark">Semester 1</span>
+                                    @elseif($course->semester == 2)
+                                        <span class="badge bg-warning text-dark">Semester 2</span>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
+                                <td class="align-middle">
+                                    @if($course->grade)
+                                        <span class="badge bg-secondary">Kelas {{ $course->grade }}</span>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
+                                <td class="align-middle">
+                                    {{ $course->major->name_major ?? '-' }}
+                                </td>
                                 <td class="align-middle text-center">
                                     <form action="{{ route('admin.gurus.remove_course', ['user' => $user->id, 'course' => $course->id]) }}" method="POST" onsubmit="return confirm('Yakin ingin melepas mata pelajaran ini dari guru tersebut?')">
                                         @csrf
@@ -78,7 +112,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="3" class="text-center py-4 text-muted">Guru ini belum mengampuh mata pelajaran apa pun.</td>
+                                <td colspan="7" class="text-center py-4 text-muted">Guru ini belum mengampuh mata pelajaran apa pun.</td>
                             </tr>
                             @endforelse
                         </tbody>

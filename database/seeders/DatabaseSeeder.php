@@ -24,5 +24,9 @@ class DatabaseSeeder extends Seeder
 
         // 2. Tambahkan Data Jurusan Default (Agar form Tambah Siswa bisa langsung dipakai)
         Major::create(['name_major' => 'Teknik Komputer dan Jaringan']);
+        Major::create(['name_major' => 'Desain Komunikasi Visual']);
+        Major::create(['name_major' => 'Teknik Instalasi Tenaga Listrik']);
+        Major::create(['name_major' => 'Teknik Pemesinan']);
+
     }
 }

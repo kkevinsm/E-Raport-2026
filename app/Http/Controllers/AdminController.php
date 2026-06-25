@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\Student;
 use App\Models\Score;
 use App\Models\Major;
+use App\Models\ClassRoom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +32,7 @@ class AdminController extends Controller
                 ->get();
         }
 
-        // Mengambil data rata-rata nilai per mapel untuk tabel
+        // Mengambil data nilai akhir per mapel untuk tabel
         $averageScores = \App\Models\Course::withAvg('scores', 'score')->get();
 
         return view('admin.dashboard', compact('chartData', 'averageScores'));
@@ -91,31 +92,40 @@ class AdminController extends Controller
 
     public function indexCourses()
     {
-        $courses = Course::all();
+        $courses = Course::with(['teachers', 'major'])->get();
         return view('admin.courses', compact('courses'));
     }
 
     public function createCourse()
     {
-        $gurus = User::where('role', 'guru')->get();
-        return view('admin.courses.create', compact('gurus'));
+        $gurus  = User::where('role', 'guru')->get();
+        $majors = Major::all();
+        return view('admin.courses.create', compact('gurus', 'majors'));
     }
 
     public function storeCourse(Request $request)
     {
         $request->validate([
-            'name' => 'required|unique:courses',
-            'guru_ids' => 'required|array', 
-            'guru_ids.*' => 'exists:users,id'
+            'name'          => 'required',
+            'academic_year' => 'required|string|max:20',
+            'semester'      => 'required|in:1,2',
+            'grade'         => 'required|in:10,11,12',
+            'major_id'      => 'required|exists:majors,id',
+            'guru_ids'      => 'required|array',
+            'guru_ids.*'    => 'exists:users,id',
         ]);
 
         $course = Course::create([
-            'name' => $request->name,
+            'name'          => $request->name,
+            'academic_year' => $request->academic_year,
+            'semester'      => $request->semester,
+            'grade'         => $request->grade,
+            'major_id'      => $request->major_id,
         ]);
 
         $course->teachers()->attach($request->guru_ids);
 
-        return redirect()->route('admin.courses')->with('success', 'Mata Pelajaran berhasil ditambahkan dan ditugaskan!');
+        return redirect()->route('admin.courses')->with('success', 'Mata Pelajaran berhasil ditambahkan!');
     }
 
     public function destroyCourse(Course $course)
@@ -143,8 +153,11 @@ class AdminController extends Controller
                 $query->whereIn('courses.id', $guruCourseIds);
             })->with(['user', 'major'])->get();
         }
+
+        // Ambil daftar Tahun Ajaran dari tabel courses untuk modal cetak rapor massal
+        $academicYears = \App\Models\Course::select('academic_year')->distinct()->pluck('academic_year');
         
-        return view('admin.students.index', compact('students'));
+        return view('admin.students.index', compact('students', 'academicYears'));
     }
 
     public function importStudents(Request $request)
@@ -163,7 +176,7 @@ class AdminController extends Controller
 
     public function manageStudentCourses(Student $student)
     {
-        $allCourses = Course::all();
+        $allCourses = Course::with('major')->get();
         // Mengambil ID mapel yang sudah diambil siswa ini
         $assignedCourseIds = $student->courses->pluck('id')->toArray(); 
         
@@ -276,7 +289,7 @@ class AdminController extends Controller
 
     public function showStudentScores(Student $student)
     {
-        $student->load('user', 'scores.course');
+        $student->load('user', 'scores.course', 'scores.category');
         
         if (\Illuminate\Support\Facades\Auth::user()->role == 'admin') {
             // Jika Admin: Tampilkan semua mapel yang sudah DIBERIKAN kepada siswa tersebut
@@ -287,7 +300,14 @@ class AdminController extends Controller
             $courses = $student->courses->intersect($guruCourses);
         }
 
-        return view('admin.students.scores', compact('student', 'courses'));
+        // Ambil daftar tahun ajaran yang unik dari courses siswa (untuk dropdown export PDF)
+        $availableYears = $student->courses
+            ->pluck('academic_year')
+            ->filter()
+            ->unique()
+            ->values();
+
+        return view('admin.students.scores', compact('student', 'courses', 'availableYears'));
     }
 
     public function storeStudentScore(Request $request, Student $student)
@@ -348,10 +368,10 @@ class AdminController extends Controller
             return redirect()->route('admin.users')->with('error', 'User tersebut bukan guru.');
         }
 
-        $user->load('courses');
+        $user->load('courses.major');
         
         $assignedCourseIds = $user->courses->pluck('id');
-        $availableCourses = Course::whereNotIn('id', $assignedCourseIds)->get();
+        $availableCourses = Course::with('major')->whereNotIn('id', $assignedCourseIds)->get();
 
         return view('admin.users.guru_detail', compact('user', 'availableCourses'));
     }
@@ -401,5 +421,58 @@ class AdminController extends Controller
     {
         $major->delete();
         return back()->with('success', 'Jurusan berhasil dihapus!');
+    }
+
+    // ==========================================
+    // --- FITUR: NAIK KELAS (MIGRATE KELAS) ---
+    // ==========================================
+
+    public function showMigrateKelas()
+    {
+        // Tampilkan siswa kelas 10, 11, dan 12 (semua bisa dimigrate)
+        $students = Student::with(['user', 'major'])
+            ->where(function ($q) {
+                $q->where('class_name', 'like', '10 %')
+                  ->orWhere('class_name', 'like', '11 %')
+                  ->orWhere('class_name', 'like', '12 %');
+            })
+            ->orderBy('class_name')
+            ->get();
+
+        return view('admin.students.migrate_kelas', compact('students'));
+    }
+
+    public function processMigrateKelas(Request $request)
+    {
+        $request->validate([
+            'student_ids'   => 'required|array|min:1',
+            'student_ids.*' => 'exists:students,id',
+        ]);
+
+        $count = 0;
+
+        foreach ($request->student_ids as $studentId) {
+            $student = Student::find($studentId);
+            if (!$student) continue;
+
+            // Ambil angka grade pertama dari class_name (e.g. "10" dari "10 TKJ 1")
+            $parts  = explode(' ', $student->class_name, 2); // ["10", "TKJ 1"]
+            $grade  = (int) ($parts[0] ?? 0);
+            $suffix = trim($parts[1] ?? '');    // "Teknik Komputer dan Jaringan 1"
+
+            if ($grade === 10 || $grade === 11) {
+                // Naik ke kelas berikutnya
+                $newClassName = ($grade + 1) . ' ' . $suffix;
+                $student->update(['class_name' => $newClassName]);
+                $count++;
+            } elseif ($grade === 12) {
+                // Kelas 12 → Telah Lulus
+                $student->update(['class_name' => 'Lulus']);
+                $count++;
+            }
+        }
+
+        return redirect()->route('admin.students')
+            ->with('success', "Berhasil menaikkan kelas untuk {$count} siswa!");
     }
 }
