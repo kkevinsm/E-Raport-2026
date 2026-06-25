@@ -84,7 +84,6 @@ Route::middleware(['auth'])->prefix('guru')->group(function () {
     // Fitur Input Nilai (Dipindah ke dalam grup Auth Guru)
     Route::get('/course/{course}/input-nilai', [GuruController::class, 'inputNilai'])->name('guru.input_nilai');
     Route::post('/course/{course}/save-nilai', [GuruController::class, 'saveNilai'])->name('guru.save_nilai');
-    Route::get('/export-pdf/{student}', [StudentController::class, 'exportPdf'])->name('export.pdf');
 });
 
 // ==========================================

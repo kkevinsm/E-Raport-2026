@@ -33,7 +33,6 @@
                                 
                                 <th class="bg-primary text-white align-middle" style="width: 120px;">Nilai Akhir</th>
                                 <th class="align-middle text-center" style="width: 100px;">CP</th>
-                                <th class="align-middle text-center" style="width: 100px;">Cetak</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -105,12 +104,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </td>
-
-                                <td class="text-center align-middle">
-                                    <a href="{{ route('export.pdf', $student->id) }}" class="btn btn-sm btn-outline-danger px-2" style="border-radius: 6px;" title="Cetak Rapor PDF">
-                                        <i class="bi bi-file-pdf-fill"></i> PDF
-                                    </a>
                                 </td>
                             </tr>
                             @endforeach

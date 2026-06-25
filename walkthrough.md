@@ -1,6 +1,6 @@
 # Walkthrough - Fitur Cetak Rapor PDF Massal (Bulk Export) & Capaian Pembelajaran
 
-Kami telah berhasil menerapkan seluruh fitur input **Capaian Pembelajaran (CP)** oleh Guru, menyederhanakan **Dashboard Siswa**, memformat ulang cetakan **PDF Rapor Siswa**, menambahkan fitur **Cetak Rapor PDF Massal (Bulk Export)** untuk Admin, serta memperbarui **Template & Fitur Import Data Siswa** agar memuat data profil siswa secara lengkap.
+Kami telah berhasil menerapkan seluruh fitur input **Capaian Pembelajaran (CP)** oleh Guru, menyederhanakan **Dashboard Siswa**, memformat ulang cetakan **PDF Rapor Siswa**, menambahkan fitur **Cetak Rapor PDF Massal (Bulk Export)** untuk Admin, memperbarui **Template & Fitur Import Data Siswa**, serta **menghapus fitur cetak PDF pada role Guru** sesuai instruksi Anda.
 
 ---
 
@@ -26,7 +26,11 @@ Kami telah berhasil menerapkan seluruh fitur input **Capaian Pembelajaran (CP)**
   - `exportPdf()`: Memuat relasi `capaianPembelajaran` agar teks deskripsi CP dapat dicetak ke dalam PDF rapor.
   - `exportPdfBulk()`: Memvalidasi ID siswa yang dipilih beserta tahun ajaran & semester, mengambil data nilai & CP masing-masing siswa tersebut, lalu mengunduh satu file PDF gabungan rapor massal.
 
-### 3. Tampilan Interface & Cetak Rapor (UI/UX)
+### 3. Rute & Keamanan (Routes)
+- **[web.php](file:///Users/mac/Documents/Codes/E-Raport-2026/e-raport-2026/routes/web.php)**:
+  - Menghapus rute `/guru/export-pdf/{student}` dari grup rute guru untuk membatasi akses ekspor PDF hanya bagi Admin dan Siswa.
+
+### 4. Tampilan Interface & Cetak Rapor (UI/UX)
 - **[index.blade.php](file:///Users/mac/Documents/Codes/E-Raport-2026/e-raport-2026/resources/views/admin/students/index.blade.php)** (Daftar Siswa Admin):
   - Ditambahkan kolom checkbox paling kiri beserta checkbox "Pilih Semua" (`#selectAll`).
   - Ditambahkan tombol **"Cetak PDF Terpilih"** di samping tombol impor. Tombol ini otomatis muncul jika ada siswa yang dicentang.
@@ -37,6 +41,7 @@ Kami telah berhasil menerapkan seluruh fitur input **Capaian Pembelajaran (CP)**
   - Menyediakan tombol **CP** yang jika diklik akan membuka modal input deskripsi capaian pembelajaran siswa.
   - Ditambahkan feedback visual: tombol berwarna biru outline (`btn-outline-primary` dengan ikon 💬) jika CP kosong, dan berwarna hijau (`btn-success` dengan ikon ☑️) jika CP sudah terisi.
   - Dilengkapi dynamic JavaScript agar warna tombol berubah seketika ketika guru mengetik atau mengubah deskripsi di textarea.
+  - **Menghapus kolom "Cetak" beserta tombol PDF** untuk setiap siswa guna membatasi fungsionalitas cetak rapor agar tidak dapat diakses oleh Guru.
 - **[dashboard.blade.php](file:///Users/mac/Documents/Codes/E-Raport-2026/e-raport-2026/resources/views/student/dashboard.blade.php)**:
   - Menyederhanakan tampilan tabel hasil belajar agar hanya memuat **No, Mata Pelajaran, Nilai Akhir, dan Capaian Pembelajaran**.
   - Rincian kolom nilai per kategori serta kolom keterangan ketuntasan telah disembunyikan agar tampilan bersih dan sesuai referensi gambar.
@@ -50,4 +55,4 @@ Kami telah berhasil menerapkan seluruh fitur input **Capaian Pembelajaran (CP)**
 ## Hasil Verifikasi
 
 1. **Migrasi Database**: Sukses dijalankan dan tabel `capaian_pembelajaran` telah dibuat.
-2. **PHP Syntax Check**: Lulus verifikasi tanpa error syntax di semua controller, model, import, dan view yang diubah.
+2. **PHP Syntax Check**: Lulus verifikasi tanpa error syntax di semua controller, model, import, rute, dan view yang diubah.
